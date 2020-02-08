@@ -19,13 +19,23 @@ public class MainMenu {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                CrescentSolitaire gameInstance = new CrescentSolitaire();
-                gameInstance.instance();
+                if (gameSelect.getSelectedIndex() == 1){
+                    CrescentSolitaire gameInstance = new CrescentSolitaire();
+                    gameInstance.createWindow();
+                }
+            }
+        });
+        optionsButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                OptionsWindow optionsWindowInstance = new OptionsWindow();
+                optionsWindowInstance.createWindow();
             }
         });
     }
 
-    private void createUI(){
+    private void buildUI(){
         gameSelect.addItem("Team 1 Game");
         gameSelect.addItem("Crescent");
 
@@ -36,7 +46,7 @@ public class MainMenu {
 
     public static void main(String[] args) {
         MainMenu menuWindow = new MainMenu();
-        menuWindow.createUI();
+        menuWindow.buildUI();
 
         JFrame frame = new JFrame("Main Menu");
         frame.setContentPane(menuWindow.MainMenu);

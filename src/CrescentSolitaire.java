@@ -12,12 +12,12 @@ public class CrescentSolitaire {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 Help helpInstance = new Help();
-                helpInstance.startWindowInstance();
+                helpInstance.createWindow(1);
             }
         });
     }
 
-    public void instance(){
+    public void createWindow(){
         JFrame frame = new JFrame("Crescent Solitaire");
         frame.setContentPane(new CrescentSolitaire().CrescentSolitaire);
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
