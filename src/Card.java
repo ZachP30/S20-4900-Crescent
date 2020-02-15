@@ -41,5 +41,12 @@ public class Card {
         return type;
     }
 
+    public String toString(){
+      String output = Integer.toString(this.value) + " " + this.suit;
+      return output;
+    }
+
+
+
 
 } //End Card Class
