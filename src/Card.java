@@ -42,7 +42,7 @@ public class Card {
     }
 
     public String toString(){
-      String output = Integer.toString(this.value) + " " + this.suit;
+      String output = Integer.toString(this.value) + "" + this.suit;
       return output;
     }
 
