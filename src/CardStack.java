@@ -1,15 +1,13 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
-public class Card {
+public class CardStack {
 
-    private int value;
-    private String suit;
-    private String type;
+    private ArrayList<Card> internalStack;
+    private int[] position;
 
-    public Card() {
-        value = 0;
-        suit = null;
-        type = null;
+    public CardStack() {
+        position = new int[2];
+        internalStack = new ArrayList<Card>(6);
     } //default Constructor
 
     public Card(int value, String suit, String type) {
