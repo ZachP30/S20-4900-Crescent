@@ -1,5 +1,6 @@
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
+
 public class Card {
 
     private int value;
@@ -15,7 +16,6 @@ public class Card {
     public Card(int value, String suit, String type) {
         this.value = value;
         this.suit = suit;
-        this.type = type;
     } //Constructor
 
     public void setValue(int value) {
@@ -33,6 +33,7 @@ public class Card {
     public int getValue() {
         return value;
     }
+
     public String getSuit() {
         return suit;
     }
@@ -41,12 +42,9 @@ public class Card {
         return type;
     }
 
-    public String toString(){
-      String output = Integer.toString(this.value) + "" + this.suit;
-      return output;
+    public String toString() {
+        String output = Integer.toString(this.value) + "" + this.suit;
+        return output;
     }
-
-
-
 
 } //End Card Class
