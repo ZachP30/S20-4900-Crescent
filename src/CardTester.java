@@ -13,6 +13,8 @@ public class CardTester {
     public static int finishedStacks = 0;
     public static int deals = 0;
 
+    public ImageIcon background = new ImageIcon(new ImageIcon(this.getClass().getResource("background.jpg")).getImage());
+
     public static void main(String[] args) {
         int[] card_size = new int[]{100, 136};
         int[] windowSize = new int[]{1200, 800};
@@ -297,11 +299,11 @@ public class CardTester {
         deal.setSize(100, 50);
         CrescentSolitaire.add(deal);
 
-        ImageIcon background = new ImageIcon(new ImageIcon("resources/background.jpg").getImage());
+        CardTester cardTester = new CardTester();
         JLabel backgroundLabel = new JLabel();
         backgroundLabel.setSize(1440, 900);
         backgroundLabel.setLocation(0, 0);
-        backgroundLabel.setIcon(background);
+        backgroundLabel.setIcon(cardTester.background);
         backgroundLabel.validate();
         CrescentSolitaire.add(backgroundLabel);
 

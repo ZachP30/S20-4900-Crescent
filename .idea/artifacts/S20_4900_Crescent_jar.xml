@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="S20-4900-Crescent:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/S20_4900_Crescent_jar</output-path>
+    <root id="archive" name="S20-4900-Crescent.jar">
+      <element id="module-output" name="S20-4900-Crescent" />
+    </root>
+  </artifact>
+</component>

@@ -11,7 +11,7 @@ public class InnerCardStack {
     public int arrayPosition;
     private int order;
 
-
+    public ImageIcon background = new ImageIcon();
     public InnerCardStack() {
         position = new Point(0, 0);
         internalStack = new ArrayList<Card>();
@@ -20,7 +20,7 @@ public class InnerCardStack {
     } //default Constructor
 
     public void draw() {
-        faceImage = new ImageIcon(new ImageIcon("resources/faces/" + this.internalStack.get(0).toString() + ".png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+        faceImage = new ImageIcon(new ImageIcon(this.getClass().getResource("faces/" + this.internalStack.get(0).toString() + ".png")).getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
         this.stackFace.setIcon(faceImage);
         this.stackFace.validate();
     } //setValue
@@ -39,11 +39,11 @@ public class InnerCardStack {
 
     public ImageIcon successfulDrag(Card draggedCard) {
         this.internalStack.add(0, draggedCard);
-        faceImage = new ImageIcon(new ImageIcon("resources/faces/" + this.internalStack.get(0).toString() + ".png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+        faceImage = new ImageIcon(new ImageIcon(this.getClass().getResource("faces/" + this.internalStack.get(0).toString() + ".png")).getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
         this.stackFace.setIcon(faceImage);
         this.stackFace.validate();
 
-        return new ImageIcon(new ImageIcon("resources/faces/" + this.internalStack.get(0).toString() + ".png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+        return new ImageIcon(new ImageIcon(this.getClass().getResource("faces/" + this.internalStack.get(0).toString() + ".png")).getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
     }
 
     public void setOrder(int order) {
