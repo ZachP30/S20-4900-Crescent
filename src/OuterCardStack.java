@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.util.*;
 
-public class CardStack {
+public class OuterCardStack {
 
     private ArrayList<Card> internalStack;
     private Point position;
@@ -13,7 +13,7 @@ public class CardStack {
     public boolean dragging;
 
 
-    public CardStack() {
+    public OuterCardStack() {
         position = new Point(0, 0);
         internalStack = new ArrayList<Card>(6);
         stackFace = new JLabel();
@@ -45,6 +45,13 @@ public class CardStack {
         this.stackFace.validate();
 
         return new ImageIcon(new ImageIcon("resources/faces/" + this.internalStack.get(0).toString() + ".png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+    }
+
+    public void successfulDrag(){
+        this.internalStack.remove(0);
+        faceImage = new ImageIcon(new ImageIcon("resources/faces/" + this.internalStack.get(0).toString() + ".png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+        this.stackFace.setIcon(faceImage);
+        this.stackFace.validate();
     }
 
     public void failedDrag(){

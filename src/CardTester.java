@@ -1,32 +1,20 @@
 import java.awt.event.*;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.ArrayList;
-import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.awt.*;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.util.Timer;
-import java.util.TimerTask;
 import javax.swing.*;
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import java.awt.Graphics;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 public class CardTester {
-
+    public static int hoveredInnerCardStack = -1;
     public static void main(String[] args) {
         int[] card_size = new int[]{100, 136};
         int[] windowSize = new int[]{1200, 800};
+        Card draggedCard = new Card();
+        JPanel CrescentSolitaire = new JPanel();
+        CrescentSolitaire.setLayout(null);
         String[] suitList = new String[]{
                 "C",
                 "S",
@@ -80,10 +68,11 @@ public class CardTester {
             }
         }
 
-//   Collections.shuffle(deck);
+//        Collections.shuffle(deck);
 
         //Piles of outside cards
-        ArrayList<CardStack> outsideSextets = new ArrayList<CardStack>();
+        ArrayList<OuterCardStack> outsideSextets = new ArrayList<OuterCardStack>();
+        ArrayList<InnerCardStack> innerStacks = new ArrayList<InnerCardStack>();
 
         Point[] outsideSextetLocations = new Point[]{
                 new Point((windowSize[0] / 8) - card_size[0], (windowSize[1] / 5) * 5 - card_size[1]),
@@ -104,8 +93,7 @@ public class CardTester {
                 new Point((windowSize[0] / 8) * 8 - card_size[0], (windowSize[1] / 5) * 5 - card_size[1]),
         };
 
-
-        Point[] insideStackLocations = new Point[]{
+        Point[] innerStackLocations = new Point[]{
                 new Point((windowSize[0] / 8) * 3 - card_size[0], (windowSize[1] / 5) * 7 - card_size[1]),
                 new Point((windowSize[0] / 8) * 4 - card_size[0], (windowSize[1] / 5) * 7 - card_size[1]),
                 new Point((windowSize[0] / 8) * 5 - card_size[0], (windowSize[1] / 5) * 7 - card_size[1]),
@@ -122,55 +110,57 @@ public class CardTester {
                 internalStack.add(deck.remove(0));
             }
 
-            CardStack cardStack = new CardStack();
-            cardStack.setPosition(outsideSextetLocations[i]);
-            cardStack.setInternalStack(internalStack);
-            outsideSextets.add(cardStack);
+            OuterCardStack outerCardStack = new OuterCardStack();
+            outerCardStack.setPosition(outsideSextetLocations[i]);
+            outerCardStack.setInternalStack(internalStack);
+            outsideSextets.add(outerCardStack);
         }
 
         //Inner Piles
-        Card[] topLeft = new Card[13];
-        Card[] topSecond = new Card[13];
-        Card[] topThird = new Card[13];
-        Card[] topRight = new Card[13];
-        Card[] bottomLeft = new Card[13];
-        Card[] bottomSecond = new Card[13];
-        Card[] bottomThird = new Card[13];
-        Card[] bottomRight = new Card[13];
+        for (int i = 0; i < 8; i++){
+            InnerCardStack innerCardStack = new InnerCardStack();
+            innerCardStack.setPosition(innerStackLocations[i]);
 
-        //Builds the inside piles of cards to be stacked on top of
-        Card testCard = new Card(1, "Clubs", "top");
-        topLeft[0] = testCard;
-        Card testCard1 = new Card(1, "Spades", "top");
-        topSecond[0] = testCard1;
-        Card testCard2 = new Card(1, "Hearts", "top");
-        topThird[0] = testCard2;
-        Card testCard3 = new Card(1, "Diamonds", "top");
-        topRight[0] = testCard3;
-        Card testCard4 = new Card(13, "Clubs", "bottom");
-        bottomLeft[0] = testCard4;
-        Card testCard5 = new Card(13, "Spades", "bottom");
-        bottomSecond[0] = testCard5;
-        Card testCard6 = new Card(13, "Hearts", "bottom");
-        bottomThird[0] = testCard6;
-        Card testCard7 = new Card(13, "Diamonds", "bottom");
-        bottomRight[0] = testCard7;
+            innerCardStack.stackFace.setLocation(innerCardStack.getPosition());
+            innerCardStack.stackFace.setSize(card_size[0], card_size[1]);
+            innerCardStack.arrayPosition = i;
+            innerCardStack.stackFace.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    super.mouseEntered(e);
+                    hoveredInnerCardStack = innerCardStack.arrayPosition;
+                    System.out.println(innerCardStack.arrayPosition);
+                }
 
-//  for (int i = 0; i < 16; i++) {
-//   CardStack thisStack = outsideSextets.get(i);
-//   ArrayList < Card > intStack = thisStack.getInternalStack();
-//   System.out.println(Arrays.toString(intStack.toArray()));  Prints out the Cards
-//  }
+                @Override
+                public void mouseExited(MouseEvent e) {
+                    super.mouseExited(e);
+                    hoveredInnerCardStack = -1;
+                }
 
-        // Game logic
-        // System.out.println(Arrays.toString(canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)));
-        // score = canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)[1];
-        // System.out.println(Arrays.toString(canPlace(outsideSextets.get(0).getInternalStack().get(2), topLeft[0], score)));
-        // score = canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)[1];
-        // System.out.println(Arrays.toString(canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)));
-        // score = canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)[1];
-        // System.out.println(Arrays.toString(canPlace(outsideSextets.get(0).getInternalStack().get(2), topLeft[0], score)));
-        // score = canPlace(outsideSextets.get(0).getInternalStack().get(1), topLeft[0], score)[1];
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    super.mouseClicked(e);
+                    System.out.println("dfasfsdafsaf");
+                }
+            });
+            innerStacks.add(innerCardStack);
+        }
+
+        innerStacks.get(0).getInternalStack().add(new Card(1, "C", "top"));
+        innerStacks.get(1).getInternalStack().add(new Card(1, "S", "top"));
+        innerStacks.get(2).getInternalStack().add(new Card(1, "H", "top"));
+        innerStacks.get(3).getInternalStack().add(new Card(1, "D", "top"));
+        innerStacks.get(4).getInternalStack().add(new Card(13, "C", "top"));
+        innerStacks.get(5).getInternalStack().add(new Card(13, "S", "top"));
+        innerStacks.get(6).getInternalStack().add(new Card(13, "H", "top"));
+        innerStacks.get(7).getInternalStack().add(new Card(13, "D", "top"));
+
+        for(int i = 0; i < 8; i++){
+            InnerCardStack innerCardStack = innerStacks.get(i);
+            innerCardStack.draw();
+            CrescentSolitaire.add(innerCardStack.stackFace);
+        }
 
         /* START OF MAKING THE GUI*/
         //1. Create the frame.
@@ -182,9 +172,7 @@ public class CardTester {
         //3. Create components and put them in the frame.
         //...create emptyLabel...
 
-        JPanel CrescentSolitaire = new JPanel();
-        CrescentSolitaire.setLayout(null);
-//  CrescentSolitaire.setLayout(null);
+
         ImageIcon imageIcon = new ImageIcon(new ImageIcon("src/logo.png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
         JLabel dragCard = new JLabel();
         dragCard.setSize(card_size[0], card_size[1]);
@@ -195,10 +183,9 @@ public class CardTester {
         frame.add(CrescentSolitaire);
 
         for (int i = 0; i < 16; i++) {
-            CardStack thisStack = outsideSextets.get(i);
+            OuterCardStack thisStack = outsideSextets.get(i);
             thisStack.stackFace.setLocation(thisStack.getPosition());
             thisStack.stackFace.setSize(card_size[0], card_size[1]);
-
             thisStack.stackFace.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mousePressed(MouseEvent e) {
@@ -215,7 +202,21 @@ public class CardTester {
                 @Override
                 public void mouseReleased(MouseEvent e) {
                     super.mouseReleased(e);
-                    thisStack.failedDrag();
+                    if(hoveredInnerCardStack != -1){
+                        InnerCardStack innerCardStack = innerStacks.get(hoveredInnerCardStack);
+                        if(canPlace(draggedCard, innerCardStack.getInternalStack().get(0), score)[0] == 1){
+                            innerCardStack.successfulDrag(draggedCard);
+                            thisStack.successfulDrag();
+                        }
+                        else{
+                            thisStack.failedDrag();
+                        }
+
+                    }
+                    else{
+                        thisStack.failedDrag();
+                    }
+
                     thisStack.dragging = false;
                     dragCard.setVisible(false);
                 }
