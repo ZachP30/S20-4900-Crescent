@@ -13,12 +13,125 @@ public class CardTester {
     public static int finishedStacks = 0;
     public static int deals = 0;
 
-    public ImageIcon background = new ImageIcon(new ImageIcon(this.getClass().getResource("background.jpg")).getImage());
+    public  ImageIcon background = new ImageIcon(new ImageIcon(this.getClass().getResource("background.jpg")).getImage());
+    public static ImageIcon imageIcon = new ImageIcon(new ImageIcon("src/logo.png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
+
+    public static ArrayList<String> scoreTracker = new ArrayList<String>();
+    public static JButton deal = new JButton();
+
+    public static JPanel CrescentSolitaire = new JPanel();
+    public static CardTester cardTester = new CardTester();
+    public static JLabel backgroundLabel = new JLabel();
+    public static JLabel scoreLabel = new JLabel();
+
+    public static ArrayList<OuterCardStack> outsideSextets = new ArrayList<OuterCardStack>();
+    public static ArrayList<InnerCardStack> innerStacks = new ArrayList<InnerCardStack>();
+    public static int[] card_size = new int[]{100, 136};
+    public static int[] windowSize = new int[]{1200, 800};
+    public static String[] suitList = new String[]{
+            "C",
+            "S",
+            "H",
+            "D"
+    };
+    public static int[] valueList = new int[]{
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13
+    };
 
     public static void main(String[] args) {
-        int[] card_size = new int[]{100, 136};
-        int[] windowSize = new int[]{1200, 800};
-        JLabel scoreLabel = new JLabel();
+
+
+
+        CrescentSolitaire.setLayout(null);
+        CrescentSolitaire.add(scoreLabel);
+
+
+
+        /* START OF MAKING THE GUI*/
+        //1. Create the frame.
+        JFrame frame = new JFrame("Crescent Solitaire");
+
+        //2. Optional: What happens when the frame closes?
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        //3. Create components and put them in the frame.
+        //...create emptyLabel...
+
+        frame.add(CrescentSolitaire);
+
+        playNewGame();
+
+
+
+        deal.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                for (int i = 0; i < 16; i++) {
+                    OuterCardStack outerCardStack = outsideSextets.get(i);
+                    outerCardStack.deal();
+                }
+                deals += 1;
+                if (deals >= 3) {
+                    deal.setVisible(false);
+                }
+            }
+        });
+
+        deal.setLocation(1440 - 120, 0);
+        deal.setSize(100, 50);
+        CrescentSolitaire.add(deal);
+            deal.setText("Deal");
+
+        backgroundLabel.setSize(1440, 900);
+        backgroundLabel.setLocation(0, 0);
+        backgroundLabel.setIcon(cardTester.background);
+        backgroundLabel.validate();
+        CrescentSolitaire.add(backgroundLabel);
+
+        frame.add(CrescentSolitaire);
+
+        //4. Size the frame.
+        frame.setSize(1440, 900);
+//        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
+
+        //5. Show it.
+        frame.setVisible(true);
+
+    } //main()
+
+    static boolean canPlace(Card source, Card destination, int order) {
+        if (order == 0 && source.getValue() == destination.getValue() + 1 && source.getSuit().equals(destination.getSuit())) {
+            CardTester.score += 5;
+            return true;
+
+        } else if (order == 1 && source.getValue() == destination.getValue() - 1 && source.getSuit().equals(destination.getSuit())) {
+            CardTester.score += 5;
+            return true;
+        } else if (order == 2 && (source.getValue() == destination.getValue() - 1 || source.getValue() == destination.getValue() + 1) && source.getSuit().equals(destination.getSuit())) {
+            CardTester.score += 5;
+            return true;
+        } else {
+            return false;
+        }
+
+    } //canPlace()
+
+    //Ivan Added playNewGame method()
+    private static void playNewGame() {
+
         scoreLabel.setFont(new Font("Serif", Font.PLAIN, 14));
         scoreLabel.setForeground(Color.white);
         scoreLabel.setText("Score: 0");
@@ -26,12 +139,10 @@ public class CardTester {
         scoreLabel.setLocation(0, 0);
         scoreLabel.validate();
 
+        //ArrayList<String> scoreTracker = new ArrayList<String>();
+        String playerName = "Dax"; //filelauncher.getUsername()
+        scoreTracker.add(score + "," + playerName);
 
-        JPanel CrescentSolitaire = new JPanel();
-        CrescentSolitaire.setLayout(null);
-        CrescentSolitaire.add(scoreLabel);
-
-        ImageIcon imageIcon = new ImageIcon(new ImageIcon("src/logo.png").getImage().getScaledInstance(100, 544 / 4, Image.SCALE_SMOOTH));
         JLabel dragCard = new JLabel();
         dragCard.setSize(card_size[0], card_size[1]);
         dragCard.setIcon(imageIcon);
@@ -39,34 +150,6 @@ public class CardTester {
         dragCard.setVisible(false);
         CrescentSolitaire.add(dragCard);
 
-        String[] suitList = new String[]{
-                "C",
-                "S",
-                "H",
-                "D"
-        };
-
-        int[] valueList = new int[]{
-                1,
-                2,
-                3,
-                4,
-                5,
-                6,
-                7,
-                8,
-                9,
-                10,
-                11,
-                12,
-                13
-        };
-
-        ArrayList<String> scoreTracker = new ArrayList<String>();
-        String playerName = "Dax"; //filelauncher.getUsername()
-        scoreTracker.add(score + "," + playerName);
-
-        //Decks
         ArrayList<Card> deck = new ArrayList<Card>(96);
 
         for (int i = 0; i < suitList.length; i++) {
@@ -92,8 +175,6 @@ public class CardTester {
         Collections.shuffle(deck);
 
         //Piles of outside cards
-        ArrayList<OuterCardStack> outsideSextets = new ArrayList<OuterCardStack>();
-        ArrayList<InnerCardStack> innerStacks = new ArrayList<InnerCardStack>();
 
         Point[] outsideSextetLocations = new Point[]{
                 new Point((windowSize[0] / 8) - card_size[0], (windowSize[1] / 5) * 5 - card_size[1]),
@@ -184,19 +265,6 @@ public class CardTester {
             innerCardStack.draw();
             CrescentSolitaire.add(innerCardStack.stackFace);
         }
-
-        /* START OF MAKING THE GUI*/
-        //1. Create the frame.
-        JFrame frame = new JFrame("Crescent Solitaire");
-
-        //2. Optional: What happens when the frame closes?
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //3. Create components and put them in the frame.
-        //...create emptyLabel...
-
-        frame.add(CrescentSolitaire);
-
         for (int i = 0; i < 16; i++) {
             OuterCardStack thisStack = outsideSextets.get(i);
             thisStack.stackFace.setLocation(thisStack.getPosition());
@@ -275,63 +343,21 @@ public class CardTester {
                     dragCard.setLocation(x - (card_size[0] / 2), y - (card_size[1] / 2));
                 }
             });
-            CrescentSolitaire.add(thisStack.stackFace);
-        }
 
-        JButton deal = new JButton();
-        deal.setText("Deal");
-        deal.addMouseListener(new MouseAdapter() {
+
+
+        thisStack.stackFace.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                for (int i = 0; i < 16; i++) {
-                    OuterCardStack outerCardStack = outsideSextets.get(i);
-                    outerCardStack.deal();
-                }
-                deals += 1;
-                if(deals >= 3){
-                    deal.setVisible(false);
-                }
+            public void mouseDragged(MouseEvent e) {
+                final Point mousePos = CrescentSolitaire.getMousePosition();
+                super.mouseDragged(e);
+                int x = mousePos.x;
+                int y = mousePos.y;
+                dragCard.setLocation(x - (card_size[0] / 2), y - (card_size[1] / 2));
             }
         });
-
-        deal.setLocation(1440 - 120, 0);
-        deal.setSize(100, 50);
-        CrescentSolitaire.add(deal);
-
-        CardTester cardTester = new CardTester();
-        JLabel backgroundLabel = new JLabel();
-        backgroundLabel.setSize(1440, 900);
-        backgroundLabel.setLocation(0, 0);
-        backgroundLabel.setIcon(cardTester.background);
-        backgroundLabel.validate();
-        CrescentSolitaire.add(backgroundLabel);
-
-        frame.add(CrescentSolitaire);
-
-        //4. Size the frame.
-        frame.setSize(1440, 900);
-//        frame.setExtendedState(frame.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-
-        //5. Show it.
-        frame.setVisible(true);
-
-    } //main()
-
-    static boolean canPlace(Card source, Card destination, int order) {
-        if (order == 0 && source.getValue() == destination.getValue() + 1 && source.getSuit().equals(destination.getSuit())) {
-            CardTester.score += 5;
-            return true;
-
-        } else if (order == 1 && source.getValue() == destination.getValue() - 1 && source.getSuit().equals(destination.getSuit())) {
-            CardTester.score += 5;
-            return true;
-        } else if (order == 2 && (source.getValue() == destination.getValue() - 1 || source.getValue() == destination.getValue() + 1) && source.getSuit().equals(destination.getSuit())) {
-            CardTester.score += 5;
-            return true;
-        } else {
-            return false;
+        CrescentSolitaire.add(thisStack.stackFace);
         }
 
-    } //canPlace()
+    }
 }
